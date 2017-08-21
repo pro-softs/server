@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+   <head>
+      <title>AutoComplete Example</title>
+      <link rel="stylesheet" href="auto-complete.css"></head>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+   </head>
+
+   <body>
+	   <form id="example_form" method="post">
+		    <div>
+		        <label for="name">First:</label>
+		        <input type="text" id="input1" name="input_first">
+		    </div>
+		    <div>
+		        <label for="mail">Second:</label>
+		        <input type="text" id="input2" name="input_sec">
+		    </div>
+		    <div>
+		        <label for="msg">Third:</label>
+		        <input type="text" id="input3" name="input_third">
+		    </div>
+		    <div>
+			    <input type="button" value="Submit" onclick="checkInput()"/>		    	
+		    </div>
+		</form>
+		<script src = "auto-complete.min.js" type = "text/javascript"></script>
+		<script type="text/javascript">
+			var list = ['One', 'Two', 'Three', 'Four', 'Five'];
+			var selected = false;
+			
+			$(document).ready(function() {
+				var xhr;
+				console.log("started");
+				var i;
+
+				new autoComplete({
+				    selector: 'input[name="input_first"]',
+				    minChars: 2,
+				    source: function(term, suggest){
+				    	term = term.toLowerCase();
+				        var matches = [];
+				        for (i=0; i<list.length; i++)
+				            if (~list[i].toLowerCase().indexOf(term)) matches.push(list[i]);
+				        suggest(matches);
+				    },
+				    /*function(term, response){
+				        try { xhr.abort(); } catch(e){}
+				        list = term;
+				        xhr = $.getJSON('/some/ajax/url/', { q: term }, function(data){ response(data); });
+				    }*/
+				    onSelect: function(e, term, item){
+				    	selected = true;
+				    }
+				});
+			});
+
+			function checkInput() {
+		    	var input1_text = document.getElementById("input1").value;
+		    	var input2_text = document.getElementById("input2").value;
+		    	var input3_text = document.getElementById("input3").value;
+		    	if(input1_text == '' || input3_text == '' || input2_text == '') {
+		            	alert("Please fill all the fields");
+		    	} else {
+		        	if (list.indexOf(input1_text > -1) && selected) {
+		            	// Trigger the form submission here
+		            	document.getElementById("example_form").submit();
+		            	alert("Submited successflly");		            	
+		        	} else {
+		            	alert("Please select input from the drop down");
+		        	}		    		
+		    	} 
+		    }
+		</script>
+	</body>
+</html>
